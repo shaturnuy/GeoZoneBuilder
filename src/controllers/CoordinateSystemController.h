@@ -20,6 +20,9 @@ public:
     void setSystem(CoordinateSystem system);
     QString systemString() const;
 
+    // https://gis-lab.info/qa/wgs84-sk42-wgs84-formula.html
+    void wgs84ToSk42(double lat, double lon, double &rlat, double &rlon);
+
 
     CoordinateSystemController(const CoordinateSystemController&) = delete;
     CoordinateSystemController& operator=(const CoordinateSystemController&) = delete;

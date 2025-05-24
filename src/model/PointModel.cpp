@@ -1,5 +1,14 @@
 #include "PointModel.h"
 
+#include "controllers/CoordinateSystemController.h"
+
+PointModel::PointModel(QObject *parent) :
+    QAbstractListModel{parent}
+{
+    connect(&CoordinateSystemController::instance(), &CoordinateSystemController::coordinateSystemChanged,
+            this, [this]{ emit dataChanged(index(0, 0), index(rowCount() - 1, columnCount() - 1)); });
+}
+
 int PointModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
@@ -50,10 +59,16 @@ QVariant PointModel::data(const QModelIndex &index, int role) const
 
 
     const AbstractPoint* point = m_points.at(index.row());
+    const double latC{point->latitude()}, lonC{point->longitude()};
+    double lat{latC}, lon{lonC};
+
+    if (CoordinateSystemController::instance().system() == CoordinateSystemController::CoordinateSystem::SK42)
+        CoordinateSystemController::instance().wgs84ToSk42(latC, lonC, lat, lon);
+
     switch (index.column())
     {
-    case Columns::Latitude:     return QString::number(point->latitude(), 'f', 6);
-    case Columns::Longitude:    return QString::number(point->longitude(), 'f', 6);
+    case Columns::Latitude:     return QString::number(lat, 'f', 6);
+    case Columns::Longitude:    return QString::number(lon, 'f', 6);
     case Columns::Type:         return point->typeName();
     default:                    return {};
     }

@@ -20,7 +20,7 @@ public:
     };
 
 public:
-    explicit PointModel(QObject *parent = nullptr) : QAbstractListModel{parent} {};
+    explicit PointModel(QObject *parent = nullptr);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
