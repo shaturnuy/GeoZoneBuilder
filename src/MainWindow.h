@@ -2,7 +2,7 @@
 
 #include <QMainWindow>
 
-#include "MapController.h"
+#include "controllers/MapController.h"
 
 class MainWindow : public QMainWindow
 {

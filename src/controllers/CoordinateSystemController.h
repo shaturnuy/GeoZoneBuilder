@@ -7,7 +7,8 @@ class CoordinateSystemController : public QObject
     Q_OBJECT
 
 public:
-    enum class CoordinateSystem {
+    enum class CoordinateSystem
+    {
         WGS84,
         SK42
     };
@@ -27,7 +28,7 @@ signals:
     void coordinateSystemChanged(CoordinateSystem system);
 
 private:
-    CoordinateSystemController();
+    CoordinateSystemController() : m_system{CoordinateSystem::WGS84} {};
     ~CoordinateSystemController() {};
 
     CoordinateSystem m_system;

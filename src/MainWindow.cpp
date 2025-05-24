@@ -1,11 +1,18 @@
 #include "MainWindow.h"
 
 #include <QMenuBar>
+#include <QSplitter>
+#include <QHeaderView>
 
-#include "CoordinateSystemController.h"
+#include "controllers/CoordinateSystemController.h"
+
 #include "MapGraphicsScene.h"
 #include "tileSources/OSMTileSource.h"
 #include "tileSources/CompositeTileSource.h"
+
+#include "model/PointModel.h"
+#include "model/points/DefaultPoint.hpp"
+#include "view/PointListView.h"
 
 #include <QDebug>
 
@@ -15,11 +22,29 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     createCoordinateSystemMenu();
 
-    this->resize(800, 600);
-    setCentralWidget(m_mapController);
+    auto pointModel = new PointModel(this);
+    auto pointListView = new PointListView(this);
+    pointListView->setModel(pointModel);
+    for (int i = 0; i < pointModel->columnCount(); ++i)
+        pointListView->setColumnWidth(i, 60);
 
-    setAttribute(Qt::WA_TransparentForMouseEvents);
-    m_mapController->setMouseTracking(true);
+    QSplitter *splitter = new QSplitter(this);
+    splitter->addWidget(pointListView);
+    splitter->addWidget(m_mapController);
+    splitter->setChildrenCollapsible(false);
+    splitter->setSizes({pointListView->sizeHint().width(), 800});
+
+    setCentralWidget(splitter);
+
+
+    pointModel->addPoint(new DefaultPoint{59.9454, 30.3539});
+    pointModel->addPoint(new DefaultPoint{59.9142, 30.3614});
+
+
+    this->resize(800, 600);
+
+    m_mapController->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
 
     QSharedPointer<OSMTileSource> osmTiles(new OSMTileSource(OSMTileSource::OSMTiles), &QObject::deleteLater);
     QSharedPointer<CompositeTileSource> composite(new CompositeTileSource(), &QObject::deleteLater);
@@ -28,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_mapController->setTileSource(composite);
 
     m_mapController->setZoomLevel(12);
-    m_mapController->centerOn(-112.202442, 40.9936234);
+    m_mapController->centerOn(30.326, 59.9407);
 
     connect(m_mapController, &MapController::cursorGeoPositionChanged, this, [](double x, double y) { qDebug() << x << y; });
 }
@@ -50,8 +75,8 @@ void MainWindow::createCoordinateSystemMenu()
     menuCoord->addAction(actionWgs84);
     menuCoord->addAction(actionSk42);
 
-    // Подключаем слот к переключению системы координат
-    connect(groupCoord, &QActionGroup::triggered, this, [=](QAction* action){
+
+    connect(groupCoord, &QActionGroup::triggered, this, [=](QAction* action) {
         if (action == actionWgs84)
             CoordinateSystemController::instance().setSystem(CoordinateSystemController::CoordinateSystem::WGS84);
         else if (action == actionSk42)

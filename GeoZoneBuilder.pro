@@ -10,8 +10,8 @@ DEFINES += MAPGRAPHICS_LIBRARY
 INCLUDEPATH += src \
                $$PWD/3rdparty/MapGraphics/MapGraphics
 
-HEADERS +=  $$files(src/*.h, true) \
-            $$files($$PWD/3rdparty/MapGraphics/MapGraphics/*.h, true)
+HEADERS +=  $$files(src/*.h*, true) \
+            $$files($$PWD/3rdparty/MapGraphics/MapGraphics/*.h*, true)
 
 SOURCES +=  main.cpp \
             $$files(src/*.cpp, true) \
