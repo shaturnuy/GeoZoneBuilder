@@ -1,0 +1,3 @@
+[submodule "3rdparty/MapGraphics"]
+	path = 3rdparty/MapGraphics
+	url = https://github.com/raptorswing/MapGraphics.git
