@@ -2,11 +2,19 @@
 
 #include <QMainWindow>
 
+#include "MapController.h"
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
     MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    ~MainWindow() {};
+
+private:
+    void createCoordinateSystemMenu();
+
+private:
+    MapController *m_mapController;
 };
