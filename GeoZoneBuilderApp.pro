@@ -8,4 +8,4 @@ HEADERS += $$files(*.h, true)
 SOURCES += $$files(*.cpp, true)
 
 INCLUDEPATH += src \
-               ../3rdparty/MapGraphics
+               ../3rdparty/MapGraphics/MapGraphics

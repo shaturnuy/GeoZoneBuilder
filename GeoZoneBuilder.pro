@@ -1,7 +1,22 @@
-TEMPLATE = subdirs
-CONFIG  += ordered
+TEMPLATE    = app
+TARGET      = GeoZoneBuilder
 
-SUBDIRS += 3rdparty/MapGraphics/MapGraphics
-SUBDIRS += GeoZoneBuilderApp
+CONFIG  += c++11
+QT      += core gui widgets network
 
-GeoZoneBuilderApp.depends = MapGraphics
+DEFINES += MAPGRAPHICS_LIBRARY
+
+
+HEADERS +=  $$files(src/*.h, true) \
+            $$files($$PWD/3rdparty/MapGraphics/MapGraphics/*.h, true)
+
+SOURCES +=  main.cpp \
+            $$files(src/*.cpp, true) \
+            $$files($$PWD/3rdparty/MapGraphics/MapGraphics/*.cpp, true)
+
+INCLUDEPATH += src \
+               $$PWD/3rdparty/MapGraphics/MapGraphics
+
+FORMS += $$PWD/3rdparty/MapGraphics/MapGraphics/guts/CompositeTileSourceConfigurationWidget.ui
+
+RESOURCES += $$PWD/3rdparty/MapGraphics/MapGraphics/resources.qrc
