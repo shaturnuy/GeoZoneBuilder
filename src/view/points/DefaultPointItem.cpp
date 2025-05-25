@@ -3,10 +3,9 @@
 
 constexpr double k_penWidth = 2.0;
 
-DefaultPointItem::DefaultPointItem(const AbstractPoint* point, AbstractPointItem* parent) :
+DefaultPointItem::DefaultPointItem(AbstractPoint* point, AbstractPointItem* parent) :
     AbstractPointItem{point, parent}
 {
-    setFlag(MapGraphicsObjectFlag::ObjectIsSelectable);
     setFlag(MapGraphicsObjectFlag::ObjectIsMovable);
     setFlag(MapGraphicsObjectFlag::ObjectIsFocusable);
 
@@ -25,8 +24,8 @@ void DefaultPointItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     Q_UNUSED(option)
     Q_UNUSED(widget)
 
-    painter->setRenderHint(QPainter::Antialiasing, true);
+    painter->setRenderHint(QPainter::Antialiasing);
     painter->setBrush(mk_color);
-    painter->setPen(QPen(QBrush(Qt::black), 2));
+    painter->setPen(QPen(QBrush(Qt::black), k_penWidth));
     painter->drawEllipse(QPointF(0, 0), mk_radius, mk_radius);
 }

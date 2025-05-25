@@ -4,7 +4,7 @@
 #include <QVector>
 #include <QUuid>
 
-#include "points/AbstractPoint.hpp"
+#include "points/AbstractPoint.h"
 
 class PointModel : public QAbstractListModel
 {
@@ -30,6 +30,9 @@ public:
     void addPoint(AbstractPoint* point);
     void removePoint(const QUuid& id);
     AbstractPoint* pointAt(int row) const;
+
+private slots:
+    void onPosChanged();
 
 private:
     QVector<AbstractPoint*> m_points;

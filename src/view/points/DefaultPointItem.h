@@ -5,7 +5,7 @@
 class DefaultPointItem : public AbstractPointItem
 {
 public:
-    DefaultPointItem(const AbstractPoint* point, AbstractPointItem* parent = nullptr);
+    DefaultPointItem(AbstractPoint* point, AbstractPointItem* parent = nullptr);
 
     QRectF boundingRect() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "model/points/AbstractPoint.hpp"
+#include "model/points/AbstractPoint.h"
 
 class DefaultPoint : public AbstractPoint
 {

@@ -1,9 +1,12 @@
 #pragma once
 
+#include <QObject>
 #include <QUuid>
 
-class AbstractPoint
+class AbstractPoint : public QObject
 {
+    Q_OBJECT
+
 public:
     enum class Type
     {
@@ -18,15 +21,17 @@ public:
 
 
     inline double latitude() const { return m_latitude; }
-    inline void setLatitude(double latitude) { m_latitude = latitude; }
-
     inline double longitude() const { return m_longitude; }
-    inline void setLongitude(double longitude) { m_longitude = longitude; }
 
     inline QUuid id() const { return m_id; }
     inline Type type() const { return m_type; }
 
+    void setPosition(double latitude, double longitude);
+
     virtual QString typeName() const = 0;
+
+signals:
+    void posChanged();
 
 protected:
     double m_latitude;
