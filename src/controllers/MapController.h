@@ -7,13 +7,11 @@ class MapController : public MapGraphicsView
     Q_OBJECT
 
 public:
-    explicit MapController(MapGraphicsScene* scene = nullptr, QWidget* parent = nullptr);
+    explicit MapController(MapGraphicsScene* scene = nullptr, QWidget* parent = nullptr) : MapGraphicsView{scene, parent} {};
 
 signals:
-    void cursorGeoPositionChanged(double lon, double lat);
-    void mouseClicked(double lon, double lat);
+    void mouseRightClicked(double lon, double lat);
 
 protected slots:
-    void handleChildMouseMove(QMouseEvent* event) override;
     void handleChildMousePress(QMouseEvent* event) override;
 };

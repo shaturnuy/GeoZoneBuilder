@@ -12,6 +12,7 @@
 
 #include "model/PointModel.h"
 #include "model/points/DefaultPoint.hpp"
+#include "view/points/DefaultPointItem.h"
 #include "view/PointListView.h"
 
 #include <QDebug>
@@ -37,8 +38,14 @@ MainWindow::MainWindow(QWidget *parent) :
     setCentralWidget(splitter);
 
 
-    pointModel->addPoint(new DefaultPoint{59.9454, 30.3539});
-    pointModel->addPoint(new DefaultPoint{59.9142, 30.3614});
+    connect(m_mapController, &MapController::mouseRightClicked, this, [=](double lon, double lat) {
+        auto point = new DefaultPoint(lat, lon);
+
+        pointModel->addPoint(point);
+
+        DefaultPointItem *item = new DefaultPointItem(point);
+        m_mapController->scene()->addObject(item);
+    });
 
 
     this->resize(800, 600);
@@ -54,8 +61,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     m_mapController->setZoomLevel(12);
     m_mapController->centerOn(30.326, 59.9407);
-
-    connect(m_mapController, &MapController::cursorGeoPositionChanged, this, [](double x, double y) { qDebug() << x << y; });
 }
 
 void MainWindow::createCoordinateSystemMenu()
