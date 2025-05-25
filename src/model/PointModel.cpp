@@ -83,19 +83,17 @@ void PointModel::addPoint(AbstractPoint *point)
     connect(point, &AbstractPoint::posChanged, this, &PointModel::onPosChanged);
 }
 
-void PointModel::removePoint(const QUuid &id)
+bool PointModel::removePoint(AbstractPoint *point)
 {
-    for (int i = 0; i < m_points.size(); ++i)
-    {
-        if (m_points.at(i)->id() != id)
-            continue;
+    int row = m_points.indexOf(point);
+    if (row < 0 || row >= m_points.size())
+        return false;
 
-        beginRemoveRows(QModelIndex(), i, i);
-        delete m_points.at(i);
-        m_points.remove(i);
-        endRemoveRows();
-        break;
-    }
+    beginRemoveRows(QModelIndex(), row, row);
+    m_points.removeAt(row);
+    endRemoveRows();
+
+    return true;
 }
 
 AbstractPoint* PointModel::pointAt(int row) const
@@ -104,6 +102,15 @@ AbstractPoint* PointModel::pointAt(int row) const
         return nullptr;
 
     return m_points.at(row);
+}
+
+QModelIndex PointModel::indexOf(AbstractPoint *point, int column) const
+{
+    const int row = m_points.indexOf(point);
+    if (row < 0 || row >= m_points.size())
+        return QModelIndex();
+
+    return index(row, column);
 }
 
 void PointModel::onPosChanged()

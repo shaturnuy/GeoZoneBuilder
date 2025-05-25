@@ -22,14 +22,19 @@ public:
 public:
     explicit PointModel(QObject *parent = nullptr);
 
+
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+
     void addPoint(AbstractPoint* point);
-    void removePoint(const QUuid& id);
+    bool removePoint(AbstractPoint* point);
+
     AbstractPoint* pointAt(int row) const;
+    QModelIndex indexOf(AbstractPoint* point, int column = 0) const;
 
 private slots:
     void onPosChanged();

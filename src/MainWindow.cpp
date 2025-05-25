@@ -19,48 +19,64 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    m_mapController{new MapController{new MapGraphicsScene{this}, this}}
+    m_mapController{new MapController{new MapGraphicsScene{this}, this}},
+    m_pointModel{new PointModel{this}},
+    m_pointListView{new PointListView{this}}
 {
     createCoordinateSystemMenu();
 
-    auto pointModel = new PointModel(this);
-    auto pointListView = new PointListView(this);
-    pointListView->setModel(pointModel);
-    for (int i = 0; i < pointModel->columnCount(); ++i)
-        pointListView->setColumnWidth(i, 60);
+
+    m_pointListView->setModel(m_pointModel);
+    for (int i = 0; i < m_pointModel->columnCount(); ++i)
+        m_pointListView->setColumnWidth(i, 60);
+
 
     QSplitter *splitter = new QSplitter(this);
-    splitter->addWidget(pointListView);
+    splitter->addWidget(m_pointListView);
     splitter->addWidget(m_mapController);
     splitter->setChildrenCollapsible(false);
-    splitter->setSizes({pointListView->sizeHint().width(), 800});
-
+    splitter->setSizes({m_pointListView->sizeHint().width(), 800});
     setCentralWidget(splitter);
 
-
-    connect(m_mapController, &MapController::mouseRightClicked, this, [=](double lon, double lat) {
-        auto point = new DefaultPoint(lat, lon);
-
-        pointModel->addPoint(point);
-
-        DefaultPointItem *item = new DefaultPointItem(point);
-        m_mapController->scene()->addObject(item);
-    });
-
-
-    this->resize(800, 600);
-
     m_mapController->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    resize(800, 600);
 
 
     QSharedPointer<OSMTileSource> osmTiles(new OSMTileSource(OSMTileSource::OSMTiles), &QObject::deleteLater);
     QSharedPointer<CompositeTileSource> composite(new CompositeTileSource(), &QObject::deleteLater);
-
     composite->addSourceBottom(osmTiles);
     m_mapController->setTileSource(composite);
-
     m_mapController->setZoomLevel(12);
     m_mapController->centerOn(30.326, 59.9407);
+
+
+    connect(m_mapController, &MapController::mouseRightClicked, this, &MainWindow::addPoint);
+}
+
+void MainWindow::addPoint(double lat, double lon)
+{
+    AbstractPoint *point = new DefaultPoint(lat, lon);
+    m_pointModel->addPoint(point);
+
+    AbstractPointItem *item = new DefaultPointItem(point);
+    m_mapController->scene()->addObject(item);
+
+    connect(item, &AbstractPointItem::deleteFromMap, this, &MainWindow::deletePoint);
+}
+
+void MainWindow::deletePoint(AbstractPointItem *item)
+{
+    if (!item)
+        return;
+
+    AbstractPoint *point = item->point();
+
+    m_mapController->scene()->removeObject(item);
+    // item->deleteLater();
+
+    // const int row = m_pointModel->indexOf(point).row();
+    // if (row >= 0)
+        m_pointModel->removePoint(point);
 }
 
 void MainWindow::createCoordinateSystemMenu()
