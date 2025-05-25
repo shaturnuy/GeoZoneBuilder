@@ -36,6 +36,8 @@ public:
     AbstractPoint* pointAt(int row) const;
     QModelIndex indexOf(AbstractPoint* point, int column = 0) const;
 
+    inline QVector<AbstractPoint*> points() const { return m_points; }
+
 private slots:
     void onPosChanged();
 
