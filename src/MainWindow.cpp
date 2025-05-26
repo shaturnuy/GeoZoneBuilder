@@ -73,6 +73,8 @@ void MainWindow::createPoint(ZoneType type, double lat, double lon)
     m_pointModel->addPoint(point);
 
     AbstractPointItem *item = PointItemFactory::create(point);
+    if (!item) return;
+
     m_mapController->scene()->addObject(item);
     connect(item, &AbstractPointItem::deleteFromMap, this, &MainWindow::deletePoint);
 }

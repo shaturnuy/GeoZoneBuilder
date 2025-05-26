@@ -10,7 +10,7 @@ class ZoneController : public QObject
     Q_OBJECT
 
 public:
-    ZoneController(AbstractZoneBuilder *builder, QObject *parent = nullptr);
+    ZoneController(ZoneType type, AbstractZoneBuilder *builder, QObject *parent = nullptr);
     ~ZoneController() {};
 
     inline ZoneType type() const { return m_type; }

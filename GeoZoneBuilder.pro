@@ -1,7 +1,7 @@
 TEMPLATE    = app
 TARGET      = GeoZoneBuilder
 
-CONFIG  += c++11
+CONFIG  += c++17
 QT      += core gui widgets network
 
 DEFINES += MAPGRAPHICS_LIBRARY
