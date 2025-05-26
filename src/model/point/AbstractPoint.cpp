@@ -1,5 +1,7 @@
 #include "AbstractPoint.h"
 
+AbstractPoint::~AbstractPoint() = default;
+
 void AbstractPoint::setPosition(double latitude, double longitude)
 {
     if (qFuzzyCompare(m_latitude, latitude) && qFuzzyCompare(m_longitude, longitude))

@@ -4,7 +4,7 @@
 #include <QVector>
 #include <QUuid>
 
-#include "points/AbstractPoint.h"
+#include "point/AbstractPoint.h"
 
 class PointModel : public QAbstractListModel
 {

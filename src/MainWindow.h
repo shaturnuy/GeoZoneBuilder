@@ -3,9 +3,13 @@
 #include <QMainWindow>
 
 #include "controllers/MapController.h"
+#include "controllers/ZoneManager.h"
+
 #include "model/PointModel.h"
+
 #include "view/PointListView.h"
-#include "view/points/AbstractPointItem.h"
+#include "view/point/AbstractPointItem.h"
+
 
 class MainWindow : public QMainWindow
 {
@@ -16,7 +20,9 @@ public:
     ~MainWindow() {};
 
 private slots:
-    void addPoint(double lat, double lon);
+    void showPointTypeMenu(double lat, double lon);
+
+    void createPoint(ZoneType type, double lat, double lon);
     void deletePoint(AbstractPointItem *item);
 
 private:
@@ -27,4 +33,6 @@ private:
 
     PointModel *m_pointModel;
     PointListView *m_pointListView;
+
+    ZoneManager *m_zoneManager;
 };

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QGraphicsItem>
-#include "model/points/AbstractPoint.h"
+#include "model/point/AbstractPoint.h"
 #include "MapGraphicsObject.h"
 
 class AbstractPointItem : public MapGraphicsObject
@@ -14,7 +14,9 @@ public:
 
     inline AbstractPoint* point() const { return m_point; }
 
+
     virtual void keyReleaseEvent(QKeyEvent *event) override;
+
     virtual QRectF boundingRect() const override = 0;
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override = 0;
 

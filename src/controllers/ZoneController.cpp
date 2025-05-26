@@ -1,23 +1,13 @@
 #include "ZoneController.h"
 
-ZoneController::ZoneController(PointModel *model, IZoneBuilder *builder, QObject *parent) :
+ZoneController::ZoneController(AbstractZoneBuilder *builder, QObject *parent) :
     QObject{parent},
-    m_model{model},
     m_builder{builder}
 {
-    connect(m_model, &PointModel::dataChanged, this, &ZoneController::updateZone);
-    connect(m_model, &PointModel::rowsInserted, this, &ZoneController::updateZone);
-    connect(m_model, &PointModel::rowsRemoved, this, &ZoneController::updateZone);
-
-    updateZone();
+    // updateZone(const std::vector<AbstractPoint*> points);
 }
 
-void ZoneController::setBuilder(IZoneBuilder *newBuilder)
+void ZoneController::updateZone(const std::vector<AbstractPoint*> points)
 {
-    m_builder = newBuilder;
-    updateZone();
-}
-
-void ZoneController::updateZone()
-{
+    // m_builder->buildZone(points);
 }

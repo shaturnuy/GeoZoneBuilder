@@ -2,10 +2,10 @@
 
 #include "AbstractPointItem.h"
 
-class DefaultPointItem : public AbstractPointItem
+class ConvexPointItem : public AbstractPointItem
 {
 public:
-    DefaultPointItem(AbstractPoint* point, AbstractPointItem* parent = nullptr);
+    ConvexPointItem(AbstractPoint* point, AbstractPointItem* parent = nullptr);
 
     QRectF boundingRect() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;

@@ -2,7 +2,6 @@
 
 #include <QMenuBar>
 #include <QSplitter>
-#include <QHeaderView>
 
 #include "controllers/CoordinateSystemController.h"
 
@@ -10,18 +9,15 @@
 #include "tileSources/OSMTileSource.h"
 #include "tileSources/CompositeTileSource.h"
 
-#include "model/PointModel.h"
-#include "model/points/DefaultPoint.hpp"
-#include "view/points/DefaultPointItem.h"
-#include "view/PointListView.h"
-
-#include <QDebug>
+#include "view/PointItemFactory.hpp"
+#include "view/PointTypePopup.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     m_mapController{new MapController{new MapGraphicsScene{this}, this}},
     m_pointModel{new PointModel{this}},
-    m_pointListView{new PointListView{this}}
+    m_pointListView{new PointListView{this}},
+    m_zoneManager{new ZoneManager{m_pointModel, this}}
 {
     createCoordinateSystemMenu();
 
@@ -35,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
     splitter->addWidget(m_pointListView);
     splitter->addWidget(m_mapController);
     splitter->setChildrenCollapsible(false);
-    splitter->setSizes({m_pointListView->sizeHint().width(), 800});
+    splitter->setSizes({m_pointListView->sizeHint().width() + 10, 800});
     setCentralWidget(splitter);
 
     m_mapController->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -50,17 +46,34 @@ MainWindow::MainWindow(QWidget *parent) :
     m_mapController->centerOn(30.326, 59.9407);
 
 
-    connect(m_mapController, &MapController::mouseRightClicked, this, &MainWindow::addPoint);
+    connect(m_mapController, &MapController::mouseRightClicked, this, &MainWindow::showPointTypeMenu);
 }
 
-void MainWindow::addPoint(double lat, double lon)
+void MainWindow::showPointTypeMenu(double lat, double lon)
 {
-    AbstractPoint *point = new DefaultPoint(lat, lon);
+    PointTypePopup *popup = new PointTypePopup(this);
+    popup->move(QCursor::pos());
+    popup->show();
+
+    connect(popup, &PointTypePopup::pointTypeChosen, this, [=](ZoneType type){ createPoint(type, lat, lon); });
+}
+
+void MainWindow::createPoint(ZoneType type, double lat, double lon)
+{
+    AbstractPoint *point = nullptr;
+    if (type == ZoneType::Convex)
+        point = new ConvexPoint(lat, lon);
+    else if (type == ZoneType::MinimumArea)
+        point = new MinimumAreaPoint(lat, lon);
+
+    if (!point)
+        return;
+
+
     m_pointModel->addPoint(point);
 
-    AbstractPointItem *item = new DefaultPointItem(point);
+    AbstractPointItem *item = PointItemFactory::create(point);
     m_mapController->scene()->addObject(item);
-
     connect(item, &AbstractPointItem::deleteFromMap, this, &MainWindow::deletePoint);
 }
 
@@ -72,11 +85,7 @@ void MainWindow::deletePoint(AbstractPointItem *item)
     AbstractPoint *point = item->point();
 
     m_mapController->scene()->removeObject(item);
-    // item->deleteLater();
-
-    // const int row = m_pointModel->indexOf(point).row();
-    // if (row >= 0)
-        m_pointModel->removePoint(point);
+    m_pointModel->removePoint(point);
 }
 
 void MainWindow::createCoordinateSystemMenu()

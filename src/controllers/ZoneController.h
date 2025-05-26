@@ -1,23 +1,23 @@
 #pragma once
 
 #include <QObject>
-#include "model/PointModel.h"
-#include "model/zone/IZoneBuilder.hpp"
+
+#include "global.hpp"
+#include "model/zone/AbstractZoneBuilder.hpp"
 
 class ZoneController : public QObject
 {
     Q_OBJECT
 
 public:
-    ZoneController(PointModel *model, IZoneBuilder *builder, QObject *parent = nullptr);
-    ~ZoneController();
+    ZoneController(AbstractZoneBuilder *builder, QObject *parent = nullptr);
+    ~ZoneController() {};
 
-    void setBuilder(IZoneBuilder *newBuilder);
+    inline ZoneType type() const { return m_type; }
 
-private slots:
-    void updateZone();
+    void updateZone(const std::vector<AbstractPoint*> points);
 
 private:
-    PointModel *m_model;
-    IZoneBuilder *m_builder;
+    ZoneType m_type;
+    AbstractZoneBuilder *m_builder;
 };

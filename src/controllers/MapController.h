@@ -10,7 +10,7 @@ public:
     explicit MapController(MapGraphicsScene* scene = nullptr, QWidget* parent = nullptr) : MapGraphicsView{scene, parent} {};
 
 signals:
-    void mouseRightClicked(double lon, double lat);
+    void mouseRightClicked(double lat, double lon);
 
 protected slots:
     void handleChildMousePress(QMouseEvent* event) override;
