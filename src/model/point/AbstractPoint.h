@@ -21,6 +21,8 @@ public:
     inline ZoneType type() const { return m_type; }
     inline QString typeName() const { return zoneTypeString(m_type); }
 
+    inline QPointF toPointF() const { return QPointF(m_longitude, m_latitude); }
+
     void setPosition(double latitude, double longitude);
 
 signals:

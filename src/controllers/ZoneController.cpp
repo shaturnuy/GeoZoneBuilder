@@ -4,7 +4,7 @@ ZoneController::ZoneController(ZoneType type, AbstractZoneBuilder *builder, QObj
     QObject{parent},
     m_type{type},
     m_builder{builder},
-    m_item{new AbstractZoneItem(QPolygonF())}
+    m_item{new AbstractZoneItem}
 {
 }
 
@@ -14,10 +14,9 @@ void ZoneController::updateZone(const QVector<AbstractPoint*> points)
         return;
 
     m_builder->buildZone(points);
-    m_item->setPoints(points);
 
     QPolygonF poly;
     for (auto point : points)
-        poly << QPointF(point->longitude(), point->latitude());
-    m_item->setGeoPoly(poly);
+        poly << point->toPointF();
+    m_item->setGeoPolygon(poly);
 }

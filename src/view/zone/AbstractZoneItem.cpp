@@ -5,53 +5,29 @@
 
 #include "3rdparty/MapGraphics/MapGraphics/guts/Conversions.h"
 
-AbstractZoneItem::AbstractZoneItem(QPolygonF geoPoly, MapGraphicsObject* parent)
-    : MapGraphicsObject(false, parent)
+AbstractZoneItem::AbstractZoneItem(MapGraphicsObject* parent) :
+    MapGraphicsObject{false, parent}
 {
-    setFlag(MapGraphicsObject::ObjectIsMovable);
+    setFlag(MapGraphicsObject::ObjectIsMovable, false);
     setFlag(MapGraphicsObject::ObjectIsSelectable,false);
-    setFlag(MapGraphicsObject::ObjectIsFocusable);
-    setGeoPoly(geoPoly);
+    setFlag(MapGraphicsObject::ObjectIsFocusable, false);
 }
 
-void AbstractZoneItem::setGeoPoly(const QPolygonF &newPoly)
+void AbstractZoneItem::setGeoPolygon(const QPolygonF &geoPolygon)
 {
-    if (newPoly == _geoPoly)
+    if (geoPolygon == m_polygon)
         return;
 
-    _geoPoly = newPoly;
-
-    this->setPos(newPoly.boundingRect().center());
-}
-
-void AbstractZoneItem::setPoints(const QVector<AbstractPoint*> &points)
-{
-    if (m_points == points)
-        return;
-
-    m_points = points;
-
-    _geoPoly.clear();
-    for (auto *point : m_points)
-        _geoPoly << QPointF(point->latitude(), point->longitude());
-    setGeoPoly(_geoPoly);
-
-    // setPos(_geoPoly.boundingRect().center());
-
-    // this->redrawRequested();
-}
-
-QVector<AbstractPoint*> AbstractZoneItem::points() const
-{
-    return m_points;
+    m_polygon = geoPolygon;
+    setPos(m_polygon.boundingRect().center());
 }
 
 QRectF AbstractZoneItem::boundingRect() const
 {
-    if (_geoPoly.isEmpty())
+    if (m_polygon.isEmpty())
         return QRectF();
 
-    QRectF latLonRect = _geoPoly.boundingRect();
+    QRectF latLonRect = m_polygon.boundingRect();
     QPointF latLonCenter = latLonRect.center();
     Position latLonCenterPos(latLonCenter, 0.0);
     Position topLeftPos(latLonRect.topLeft(), 0.0);
@@ -65,31 +41,19 @@ QRectF AbstractZoneItem::boundingRect() const
 
 void AbstractZoneItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/)
 {
-    if (_geoPoly.size() < 3)
-        return;
+    painter->setRenderHint(QPainter::Antialiasing,true);
 
-    painter->setRenderHint(QPainter::Antialiasing, true);
+    QPolygonF enuPoly;
 
-    QPainterPath path;
-
-    QPointF latLonCenter = _geoPoly.boundingRect().center();
-    Position centerPos(latLonCenter, 0.0);
-
-    // Переводим каждую точку в ENU и добавляем в path
-    for (int i = 0; i < _geoPoly.size(); ++i)
+    const Position latLonCenterPos(m_polygon.boundingRect().center(), 0);
+    for(const QPointF &latLon : std::as_const(m_polygon))
     {
-        Position pos(_geoPoly.at(i), 0.0);
-        QPointF enu = Conversions::lla2enu(pos, centerPos).toPointF();
-
-        if (i == 0)
-            path.moveTo(enu);
-        else
-            path.lineTo(enu);
+        Position latLonPos(latLon, 0.0);
+        QPointF enu = Conversions::lla2enu(latLonPos, latLonCenterPos).toPointF();
+        enuPoly << enu;
     }
-
-    path.closeSubpath();
 
     painter->setBrush(QColor(255, 0, 0, 80));
     painter->setPen(QPen(Qt::red, 2));
-    painter->drawPath(path);
+    painter->drawPolygon(enuPoly);
 }
