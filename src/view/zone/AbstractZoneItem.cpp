@@ -5,6 +5,8 @@
 
 #include "3rdparty/MapGraphics/MapGraphics/guts/Conversions.h"
 
+AbstractZoneItem::~AbstractZoneItem() = default;
+
 AbstractZoneItem::AbstractZoneItem(MapGraphicsObject* parent) :
     MapGraphicsObject{false, parent}
 {
@@ -39,9 +41,11 @@ QRectF AbstractZoneItem::boundingRect() const
     return QRectF(topLeftENU, bottomRightENU);
 }
 
-void AbstractZoneItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/)
+void AbstractZoneItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->setRenderHint(QPainter::Antialiasing,true);
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
+
 
     QPolygonF enuPoly;
 
@@ -53,7 +57,6 @@ void AbstractZoneItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* 
         enuPoly << enu;
     }
 
-    painter->setBrush(QColor(255, 0, 0, 80));
-    painter->setPen(QPen(Qt::red, 2));
+    painter->setRenderHint(QPainter::Antialiasing, true);
     painter->drawPolygon(enuPoly);
 }

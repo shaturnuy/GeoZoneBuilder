@@ -1,10 +1,12 @@
 #include "ZoneController.h"
 
+#include "view/ZoneItemFactory.hpp"
+
 ZoneController::ZoneController(ZoneType type, AbstractZoneBuilder *builder, QObject *parent) :
     QObject{parent},
     m_type{type},
     m_builder{builder},
-    m_item{new AbstractZoneItem}
+    m_item{ZoneItemFactory::create(type)}
 {
 }
 
