@@ -1,6 +1,6 @@
 #include "MinimumAreaZoneBuilder.h"
 
-QPolygonF MinimumAreaZoneBuilder::buildZone(const std::vector<AbstractPoint*> &points)
+QPolygonF MinimumAreaZoneBuilder::buildZone(const QVector<AbstractPoint*> &points)
 {
     QPolygonF polygon;
     return polygon;

@@ -21,21 +21,29 @@ ZoneManager::~ZoneManager()
         controller->deleteLater();
 }
 
+QList<AbstractZoneItem*> ZoneManager::items() const
+{
+    QList<AbstractZoneItem*> items;
+    for (const auto& [type, controller] : m_zoneControllers)
+        items.append(controller->item());
+    return items;
+}
+
 void ZoneManager::onPointModelChanged()
 {
     for (const auto& [type, controller] : m_zoneControllers)
         controller->updateZone(pointsByType(controller->type()));
 }
 
-std::vector<AbstractPoint*> ZoneManager::pointsByType(ZoneType type)
+QVector<AbstractPoint*> ZoneManager::pointsByType(ZoneType type)
 {
     const QVector<AbstractPoint*> allPoints = m_model->points();
 
-    std::vector<AbstractPoint*> points;
+    QVector<AbstractPoint*> points;
     for (AbstractPoint *point : allPoints)
     {
         if (point->type() == type)
-            points.push_back(point);
+            points.append(point);
     }
     return points;
 }

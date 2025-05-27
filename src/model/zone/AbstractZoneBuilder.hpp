@@ -10,5 +10,5 @@ public:
     explicit AbstractZoneBuilder() {}
     virtual ~AbstractZoneBuilder() = default;
 
-    virtual QPolygonF buildZone(const std::vector<AbstractPoint*>& points) = 0;
+    virtual QPolygonF buildZone(const QVector<AbstractPoint*>& points) = 0;
 };

@@ -4,6 +4,7 @@
 
 #include "global.hpp"
 #include "model/zone/AbstractZoneBuilder.hpp"
+#include "view/zone/AbstractZoneItem.h"
 
 class ZoneController : public QObject
 {
@@ -14,10 +15,12 @@ public:
     ~ZoneController() {};
 
     inline ZoneType type() const { return m_type; }
+    inline AbstractZoneItem* item() const { return m_item; }
 
-    void updateZone(const std::vector<AbstractPoint*> points);
+    void updateZone(const QVector<AbstractPoint*> points);
 
 private:
     ZoneType m_type;
     AbstractZoneBuilder *m_builder;
+    AbstractZoneItem *m_item;
 };

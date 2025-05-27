@@ -12,13 +12,15 @@ public:
     explicit ZoneManager(PointModel* model, QObject* parent = nullptr);
     ~ZoneManager();
 
+    QList<AbstractZoneItem*> items() const;
+
 private slots:
     void onPointModelChanged();
 
 private:
-    std::vector<AbstractPoint*> pointsByType(ZoneType type);
+    QVector<AbstractPoint*> pointsByType(ZoneType type);
 
 private:
-    PointModel* m_model;
+    PointModel *m_model;
     std::map<ZoneType, ZoneController*> m_zoneControllers;
 };
