@@ -22,6 +22,8 @@ void AbstractZoneItem::setGeoPolygon(const QPolygonF &geoPolygon)
 
     m_polygon = geoPolygon;
     setPos(m_polygon.boundingRect().center());
+
+    emit redrawRequested();
 }
 
 QRectF AbstractZoneItem::boundingRect() const

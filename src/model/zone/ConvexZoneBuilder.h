@@ -7,5 +7,5 @@ class ConvexZoneBuilder : public AbstractZoneBuilder
 public:
     ConvexZoneBuilder() : AbstractZoneBuilder() {};
 
-    QPolygonF buildZone(const QVector<AbstractPoint*> &points) override;
+    QPolygonF buildZone(QVector<QPointF> &&points) override;
 };

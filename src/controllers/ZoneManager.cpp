@@ -1,14 +1,14 @@
 #include "ZoneManager.h"
 
-#include "model/zone/ConvexZoneBuilder.h"
-#include "model/zone/MinimumAreaZoneBuilder.h"
-
 ZoneManager::ZoneManager(PointModel *model, QObject *parent) :
     QObject{parent},
     m_model{model}
 {
-    m_zoneControllers.insert({ZoneType::Convex, new ZoneController(ZoneType::Convex, new ConvexZoneBuilder(), this)});
-    m_zoneControllers.insert({ZoneType::MinimumArea, new ZoneController(ZoneType::MinimumArea, new MinimumAreaZoneBuilder(), this)});
+    for (int iter = 0; iter < static_cast<int>(ZoneType::COUNT); ++iter) // простите....
+    {
+        ZoneType type = static_cast<ZoneType>(iter);
+        m_zoneControllers.insert({type, new ZoneController(type, this)});
+    }
 
     connect(m_model, &PointModel::dataChanged, this, &ZoneManager::onPointModelChanged);
     connect(m_model, &PointModel::rowsInserted, this, &ZoneManager::onPointModelChanged);
@@ -35,15 +35,13 @@ void ZoneManager::onPointModelChanged()
         controller->updateZone(pointsByType(controller->type()));
 }
 
-QVector<AbstractPoint*> ZoneManager::pointsByType(ZoneType type)
+QVector<QPointF> ZoneManager::pointsByType(ZoneType type)
 {
-    const QVector<AbstractPoint*> allPoints = m_model->points();
-
-    QVector<AbstractPoint*> points;
-    for (AbstractPoint *point : allPoints)
+    QVector<QPointF> points;
+    for (const AbstractPoint *point : m_model->points())
     {
         if (point->type() == type)
-            points.append(point);
+            points.append(point->toPointF());
     }
     return points;
 }

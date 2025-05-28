@@ -11,13 +11,13 @@ class ZoneController : public QObject
     Q_OBJECT
 
 public:
-    ZoneController(ZoneType type, AbstractZoneBuilder *builder, QObject *parent = nullptr);
+    ZoneController(ZoneType type, QObject *parent = nullptr);
     ~ZoneController() {};
 
     inline ZoneType type() const { return m_type; }
     inline AbstractZoneItem* item() const { return m_item; }
 
-    void updateZone(const QVector<AbstractPoint*> points);
+    void updateZone(QVector<QPointF> &&points);
 
 private:
     ZoneType m_type;

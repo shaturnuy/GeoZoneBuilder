@@ -12,5 +12,5 @@ public:
 
 private:
     const double mk_width = 14.0;
-    const QColor mk_color = Qt::GlobalColor::cyan;
+    const QColor mk_color = Qt::GlobalColor::blue;
 };

@@ -6,7 +6,7 @@
 
 void MinimumAreaZoneItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    QColor color(Qt::cyan);
+    QColor color(Qt::blue);
     painter->setPen(QPen(color, 2));
 
     color.setAlpha(80);

@@ -5,7 +5,8 @@
 enum class ZoneType
 {
     Convex,
-    MinimumArea
+    MinimumArea,
+    COUNT
 };
 
 inline QString zoneTypeString(ZoneType type)

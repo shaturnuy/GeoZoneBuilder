@@ -18,7 +18,7 @@ private slots:
     void onPointModelChanged();
 
 private:
-    QVector<AbstractPoint*> pointsByType(ZoneType type);
+    QVector<QPointF> pointsByType(ZoneType type);
 
 private:
     PointModel *m_model;

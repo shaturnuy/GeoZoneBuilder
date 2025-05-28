@@ -7,5 +7,5 @@ class MinimumAreaZoneBuilder : public AbstractZoneBuilder
 public:
     MinimumAreaZoneBuilder() = default;
 
-    QPolygonF buildZone(const QVector<AbstractPoint*> &points) override;
+    QPolygonF buildZone(QVector<QPointF> &&points) override;
 };

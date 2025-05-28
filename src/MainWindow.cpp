@@ -45,8 +45,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_mapController->setZoomLevel(12);
     m_mapController->centerOn(30.326, 59.9407);
 
-    const auto &items = m_zoneManager->items(); // c++11 range-loop might detach Qt container
-    for (auto *item : items)
+    const QList<AbstractZoneItem*> &items = m_zoneManager->items();
+    for (AbstractZoneItem *item : items)
         m_mapController->scene()->addObject(item);
 
     connect(m_mapController, &MapController::mouseRightClicked, this, &MainWindow::showPointTypeMenu);
