@@ -9,7 +9,9 @@
 #include "tileSources/OSMTileSource.h"
 #include "tileSources/CompositeTileSource.h"
 
-#include "view/PointItemFactory.hpp"
+#include "factory/PointItemFactory.hpp"
+#include "factory/PointFactory.hpp"
+
 #include "view/PointTypePopup.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -58,26 +60,16 @@ void MainWindow::showPointTypeMenu(double lat, double lon)
     popup->move(QCursor::pos());
     popup->show();
 
-    connect(popup, &PointTypePopup::pointTypeChosen, this, [=](ZoneType type){ createPoint(type, lat, lon); });
+    connect(popup, &PointTypePopup::createPoint, this, [=](ZoneType type){ createPoint(type, lat, lon); });
 }
 
 void MainWindow::createPoint(ZoneType type, double lat, double lon)
 {
-    AbstractPoint *point = nullptr;
-    if (type == ZoneType::Convex)
-        point = new ConvexPoint(lat, lon);
-    else if (type == ZoneType::MinimumArea)
-        point = new MinimumAreaPoint(lat, lon);
-
-    if (!point)
-        return;
-
-
+    AbstractPoint *point = PointFactory::create(type);
+    point->setPosition(lat, lon);
     m_pointModel->addPoint(point);
 
-    AbstractPointItem *item = PointItemFactory::create(point);
-    if (!item) return;
-
+    AbstractPointItem *item = PointItemFactory::create(type, point);
     m_mapController->scene()->addObject(item);
     connect(item, &AbstractPointItem::deleteFromMap, this, &MainWindow::deletePoint);
 }

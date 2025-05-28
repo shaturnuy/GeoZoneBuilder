@@ -12,5 +12,5 @@ public:
     PointTypePopup(QWidget* parent = nullptr);
 
 signals:
-    void pointTypeChosen(ZoneType type);
+    void createPoint(ZoneType type);
 };

@@ -1,7 +1,7 @@
 #include "ZoneController.h"
 
-#include "view/ZoneBuilderFactory.hpp"
-#include "view/ZoneItemFactory.hpp"
+#include "factory/ZoneBuilderFactory.hpp"
+#include "factory/ZoneItemFactory.hpp"
 
 ZoneController::ZoneController(ZoneType type, QObject *parent) :
     QObject{parent},

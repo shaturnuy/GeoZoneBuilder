@@ -21,12 +21,12 @@ PointTypePopup::PointTypePopup(QWidget *parent) :
     layout->addWidget(buttonMinArea);
 
     connect(buttonConvex, &QPushButton::clicked, this, [this] {
-        emit pointTypeChosen(ZoneType::Convex);
+        emit createPoint(ZoneType::Convex);
         close();
     });
 
     connect(buttonMinArea, &QPushButton::clicked, this, [this] {
-        emit pointTypeChosen(ZoneType::MinimumArea);
+        emit createPoint(ZoneType::MinimumArea);
         close();
     });
 }
